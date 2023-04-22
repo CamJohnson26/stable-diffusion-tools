@@ -7,6 +7,8 @@
     <orderEntry type="jdk" jdkName="Python 3.10 (stable-diffusion-tools)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="stable-diff" />
+    <orderEntry type="module" module-name="queue-testing" />
+    <orderEntry type="module" module-name="pycharm-templates" />
   </component>
   <component name="PackageRequirementsSettings">
     <option name="removeUnused" value="true" />

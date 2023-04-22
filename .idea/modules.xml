@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../pycharm-templates/.idea/pycharm-templates.iml" filepath="$PROJECT_DIR$/../pycharm-templates/.idea/pycharm-templates.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../queue-testing/.idea/queue-testing.iml" filepath="$PROJECT_DIR$/../queue-testing/.idea/queue-testing.iml" />
       <module fileurl="file://$PROJECT_DIR$/../stable-diff/.idea/stable-diff.iml" filepath="$PROJECT_DIR$/../stable-diff/.idea/stable-diff.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/stable-diffusion-tools.iml" filepath="$PROJECT_DIR$/.idea/stable-diffusion-tools.iml" />
     </modules>
