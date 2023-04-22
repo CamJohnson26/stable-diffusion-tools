@@ -7,11 +7,11 @@ __pycache__/
 *.so
 
 output/*
-archive/Dropbox/*
-archive/Dropbox/holding/*
-archive/Dropbox/input/*
-archive/Dropbox/output/*
-archive/Dropbox/venv/*
+Archive/Dropbox/*
+Archive/Dropbox/holding/*
+Archive/Dropbox/input/*
+Archive/Dropbox/output/*
+Archive/Dropbox/venv/*
 
 # Distribution / packaging
 .Python
