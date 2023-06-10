@@ -27,6 +27,33 @@ def publish_message(message: str, queue_name: str):
     connection.close()
 
 
+def retry_failed(queue_name: str):
+    """Read all the messages from our dead letter queue and republish them to the original queue,
+    but only if they match the queue name we are interested in. Ignore all other messages.
+
+    This function will read all the messages from our dead letter queue and republish them to the original queue,
+    but only if they match the queue name we are interested in. Ignore all other messages."""
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_URL, port=RABBITMQ_PORT,
+                                                                   credentials=pika.PlainCredentials(RABBITMQ_USERNAME,
+                                                                                                     RABBITMQ_PASSWORD)))
+    channel = connection.channel()
+    dead_letter_queue = channel.queue_declare(f'dead_letter_queue_{queue_name}')
+
+    messages = dead_letter_queue.method.message_count
+    print(f" [*] {messages} messages in the dead letter queue")
+
+    for i in range(messages):
+        method_frame, header_frame, body = channel.basic_get(f'dead_letter_queue_{queue_name}')
+        if method_frame:
+            print(f" [x] Republishing {body.decode()}")
+            channel.basic_publish(exchange='', routing_key=queue_name, body=body)
+            channel.basic_ack(method_frame.delivery_tag)
+        else:
+            print(' [x] No message returned')
+            break
+    connection.close()
+
+
 async def wait_for_close(channel):
     """Wait for the channel to be closed
 
@@ -46,14 +73,13 @@ async def setup_rabbitmq(loop: asyncio.AbstractEventLoop, queues: list[tuple[str
     # Declare the dead letter exchange
     dead_letter_exchange = await channel.declare_exchange('dead_letter_exchange', aio_pika.ExchangeType.FANOUT)
 
-    # Declare the dead letter queue and bind it to the dead letter exchange
-    dead_letter_queue = await channel.declare_queue('dead_letter_queue')
-    await dead_letter_queue.bind(dead_letter_exchange)
-
     for queue_name, callback in queues:
+        # Declare the dead letter queue and bind it to the dead letter exchange
+        dead_letter_queue = await channel.declare_queue(f'dead_letter_queue_{queue_name}')
+        await dead_letter_queue.bind(dead_letter_exchange)
         queue = await channel.declare_queue(queue_name, arguments={
             'x-dead-letter-exchange': 'dead_letter_exchange',
-            'x-dead-letter-routing-key': 'dead_letter_queue'
+            'x-dead-letter-routing-key': f'dead_letter_queue_{queue_name}'
         })
         await queue.consume(callback)
 

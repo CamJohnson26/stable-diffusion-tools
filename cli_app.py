@@ -5,12 +5,11 @@ from dotenv import load_dotenv
 from background_job import initiate_background_tasks
 from prompt_helpers import generate_object_close_up, generate_outside_wide_shot
 # from prompt_helpers import generate_object_close_up, generate_outside_wide_shot
-from rabbitmq import publish_message
+from rabbitmq import publish_message, retry_failed
 
 load_dotenv()
 
 # token = os.environ.get("")
-
 
 class CLIApp(Cmd):
     """A simple CLI app."""
@@ -19,6 +18,10 @@ class CLIApp(Cmd):
     def do_consume(self, args):
         """Start consuming messages."""
         initiate_background_tasks()
+
+    def do_retry_failed_generate(self, args):
+        """Start consuming messages."""
+        retry_failed('image_generate')
 
     def do_generate(self, args):
         """Generate an image."""
