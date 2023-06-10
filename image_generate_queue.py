@@ -14,8 +14,8 @@ async def image_generate_queue_callback(message: aio_pika.IncomingMessage):
     try:
         generate_image = importlib.import_module("generate_image")
         print(f" [x] Received {message.body.decode()}")
-        generate_image.generate_image(message.body.decode())
         await message.ack()
+        generate_image.generate_image(message.body.decode())
     except Exception as e:
         print("Error:", e)
         await message.reject(requeue=False)
