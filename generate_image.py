@@ -1,4 +1,5 @@
 from os import environ, mkdir, path
+from os.path import join
 
 from dotenv import load_dotenv
 
@@ -31,12 +32,16 @@ def generate_image(description):
     if not path.exists(OUTPUT_FOLDER):
         mkdir(OUTPUT_FOLDER)
 
+    destination_folder = join(OUTPUT_FOLDER, filename)
+    if not path.exists(destination_folder):
+        mkdir(destination_folder)
+
     images = pipe(description, guidance_scale=GUIDANCE_SCALE, num_inference_steps=NUM_INFERENCE_STEPS,
                   num_images_per_prompt=NUM_IMAGES_PER_PROMPT).images
 
     for i, image in enumerate(images):
-        image.save(f"{OUTPUT_FOLDER}/{filename}_{i}.png")
+        image.save(f"{destination_folder}/{filename}_{i}.png")
 
     """Create text file with description and timestamp."""
-    with open(f"{OUTPUT_FOLDER}/{filename}.txt", "w") as text_file:
+    with open(f"{destination_folder}/{filename}.txt", "w") as text_file:
         text_file.write(f"{description} {timestamp}")

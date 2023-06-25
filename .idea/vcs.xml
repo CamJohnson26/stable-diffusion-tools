@@ -3,6 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../pycharm-templates" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../queue-testing" vcs="Git" />
   </component>
 </project>
